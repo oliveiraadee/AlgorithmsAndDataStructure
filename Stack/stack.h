@@ -1,41 +1,58 @@
 #include <iostream>
 #include <exception>
+#include <stdexcept>
 using namespace std;
-
 template <class T>
 class Stack{
+	struct Node{
+	T data;
+	Node *next;
+	
+};
+
     private:
-        int capacity;
-        int top;
-        T * items;
+        Node * top; 
     public:
-        Stack(int capacity){
-            this->items = new T[capacity];
-            this->capacity = capacity;
-            this->top = -1;
+        Stack(){
+        	this->top = NULL;
         }
 
         ~Stack(){
-            delete[] items;
+        	
         }
 
         void add(T item){
-            if(top == capacity){
-                this->items[++top] = item;
-            }
-        }
+           Node *newTemp = new Node();
+           if(newTemp == NULL ){
+	        throw std::overflow_error("Stack Overflow");
+	    
+		   }else{
+			   	newTemp->data = item;
+			  	newTemp->next = top;
+			  	top = newTemp;
+		   } 	
+		}
+		
 
         T pop(){
-            if(top == -1){
-                //  throw bad_alloc("ERROR");
-            }else{
-                return this->items[top--];
+	        if(top == NULL){
+	          	throw std::underflow_error("Stack Underflow");
+			}else{
+			  	Node * temp = top;
+			  	T aux= top->data;
+			  	top = top-> next;
+			  	delete(temp);
+                return aux;
             }
-        }
+}
 
-        void print(){
-            for(int i = 0; i < this->capacity; i++){
-            std::cout << "Element" << i << this->items[i] << std::endl;
-            }
+        void imprimir(){
+        	Node *aux = new Node();
+        	aux= top;
+            while(aux != NULL){
+            	cout << aux->data << " ";
+            	aux = aux->next;
+			}
         }
 };
+

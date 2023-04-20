@@ -6,72 +6,53 @@
  */
 #include <iostream>
 #include "stack.h"
-#include <stack>
-using namespace std;
 
 using namespace std;
 
-int isOperator(char token)
-{
-	switch (token)
-	{
+int isOperator(char token) {
+	switch(token) {
 	case '+':
-
 	case '-':
-		return '*';
-		break;
 	case '*':
-		return '*';
-		break;
-	case '/':
-		return '/';
-		break;
-	default:
-		return 0;
+	case '/': return 1;
+	default: return 0;
 	}
 }
 
-int rate(char token, int valorEsq, int valorDir)
-{
-	switch (token)
-	{
-	case '+':
-		return valorEsq + valorDir;
-	case '-':
-		return valorEsq - valorDir;
-	case '*':
-		return valorEsq * valorDir;
-	case '/':
-		return valorEsq / valorDir;
-	default:
-		return 0;
+int rate(char token, int valueLeft, int valueRight) {
+	switch(token) {
+	case '+': return valueLeft + valueRight;
+	case '-': return valueLeft - valueRight;
+	case '*': return valueLeft * valueRight;
+	case '/': return valueLeft / valueRight;
+	default: return 0;
 	}
 }
 
-int polish(const char *exp)
-{
-	// std::stack<int> stack;
-	Stack<int> stack(10);
-	while (*exp)
-	{
+int polish(const char * exp) {
+	Stack<int> stack;
+	while (*exp) {
 		char token = *exp;
-		cout << *exp;
-		int valorDir = stack.pop();
-		/*int valorDir = stack.top();
-		stack.pop();*/
-		int valorEsq = stack.pop();
-		/*int valorEsq = stack.top();
-		stack.pop();*/
-		double resultado = rate(token, valorEsq, valorDir);
-		stack.add(resultado);
-		// stack.push(resultado);
+		if (isOperator(token)) {
+			int valueRight = stack.pop();
+			int valueLeft = stack.pop();
+			int resultado = rate(token, valueLeft, valueRight);
+			stack.add(resultado);
+		} else {
+			int valor = (int)(token - '0');
+			stack.add(valor);
+		}
+		exp++;
 	}
-	exp++;
+	return stack.pop();
 }
 
-int main()
-{
+int main() {
 	cout << polish("23+31-*") << endl;
-	cout << polish("40+82/-") << endl;
-	cout << polish("55*50-/") << endl;
+	cout << polish("93*42/-") << endl;
+	cout << polish("83*22/-") << endl;
+
 }
+
+
+
